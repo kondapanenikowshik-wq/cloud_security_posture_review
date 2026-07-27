@@ -45,12 +45,43 @@ resource "aws_s3_bucket_public_access_block" "private_data" {
   restrict_public_buckets = true
 }
 
+resource "aws_kms_key" "s3" {
+  description             = "KMS key for the remediated private S3 bucket"
+  deletion_window_in_days = 30
+  enable_key_rotation     = true
+
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Sid    = "EnableRootAccountPermissions"
+        Effect = "Allow"
+        Principal = {
+          AWS = "arn:aws:iam::${data.aws_caller_identity.current.account_id}:root"
+        }
+        Action   = "kms:*"
+        Resource = "*"
+      }
+    ]
+  })
+
+  tags = merge(local.common_tags, {
+    Name = "${local.name_prefix}-s3-kms-key"
+  })
+}
+
+resource "aws_kms_alias" "s3" {
+  name          = "alias/${local.name_prefix}-s3"
+  target_key_id = aws_kms_key.s3.key_id
+}
+
 resource "aws_s3_bucket_server_side_encryption_configuration" "private_data" {
   bucket = aws_s3_bucket.private_data.id
 
   rule {
     apply_server_side_encryption_by_default {
-      sse_algorithm = "AES256"
+      sse_algorithm     = "aws:kms"
+      kms_master_key_id = aws_kms_key.s3.arn
     }
   }
 }
@@ -234,4 +265,31 @@ resource "aws_db_instance" "private_postgres" {
   tags = merge(local.common_tags, {
     Control = "Private encrypted RDS instance"
   })
+}
+
+# Lifecycle management for the protected S3 bucket
+resource "aws_s3_bucket_lifecycle_configuration" "private_data" {
+  bucket = aws_s3_bucket.private_data.id
+
+  depends_on = [aws_s3_bucket_versioning.private_data]
+
+  rule {
+    id     = "archive-and-cleanup"
+    status = "Enabled"
+
+    filter {}
+
+    abort_incomplete_multipart_upload {
+      days_after_initiation = 7
+    }
+
+    noncurrent_version_transition {
+      noncurrent_days = 30
+      storage_class   = "STANDARD_IA"
+    }
+
+    noncurrent_version_expiration {
+      noncurrent_days = 365
+    }
+  }
 }

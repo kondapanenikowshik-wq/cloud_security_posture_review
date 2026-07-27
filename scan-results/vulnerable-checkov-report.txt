@@ -1,0 +1,996 @@
+
+       _               _
+   ___| |__   ___  ___| | _______   __
+  / __| '_ \ / _ \/ __| |/ / _ \ \ / /
+ | (__| | | |  __/ (__|   < (_) \ V /
+  \___|_| |_|\___|\___|_|\_\___/ \_/
+
+By Prisma Cloud | version: 3.3.8
+
+terraform scan results:
+
+Passed checks: 16, Failed checks: 42, Skipped checks: 0
+
+Check: CKV_AWS_93: "Ensure S3 bucket policy does not lockout all but root user. (Prevent lockouts needing root account fixes)"
+	PASSED for resource: aws_s3_bucket.public_data
+	File: /main.tf:31-38
+	Guide: https://docs.prismacloud.io/en/enterprise-edition/policy-reference/aws-policies/s3-policies/bc-aws-s3-24
+Check: CKV_AWS_93: "Ensure S3 bucket policy does not lockout all but root user. (Prevent lockouts needing root account fixes)"
+	PASSED for resource: aws_s3_bucket_policy.public_read
+	File: /main.tf:49-66
+	Guide: https://docs.prismacloud.io/en/enterprise-edition/policy-reference/aws-policies/s3-policies/bc-aws-s3-24
+Check: CKV_AWS_274: "Disallow IAM roles, users, and groups from using the AWS AdministratorAccess policy"
+	PASSED for resource: aws_iam_user_policy_attachment.overprivileged_user
+	File: /main.tf:95-98
+	Guide: https://docs.prismacloud.io/en/enterprise-edition/policy-reference/aws-policies/aws-iam-policies/bc-aws-274
+Check: CKV_AWS_25: "Ensure no security groups allow ingress from 0.0.0.0:0 to port 3389"
+	PASSED for resource: aws_security_group.open_admin
+	File: /main.tf:129-166
+	Guide: https://docs.prismacloud.io/en/enterprise-edition/policy-reference/aws-policies/aws-networking-policies/networking-2
+Check: CKV_AWS_277: "Ensure no security groups allow ingress from 0.0.0.0:0 to port -1"
+	PASSED for resource: aws_security_group.open_admin
+	File: /main.tf:129-166
+	Guide: https://docs.prismacloud.io/en/enterprise-edition/policy-reference/aws-policies/aws-networking-policies/ensure-aws-security-group-does-not-allow-all-traffic-on-all-ports
+Check: CKV_AWS_354: "Ensure RDS Performance Insights are encrypted using KMS CMKs"
+	PASSED for resource: aws_db_instance.public_postgres
+	File: /main.tf:178-196
+	Guide: https://docs.prismacloud.io/en/enterprise-edition/policy-reference/aws-policies/aws-general-policies/bc-aws-354
+Check: CKV_AWS_211: "Ensure RDS uses a modern CaCert"
+	PASSED for resource: aws_db_instance.public_postgres
+	File: /main.tf:178-196
+	Guide: https://docs.prismacloud.io/en/enterprise-edition/policy-reference/aws-policies/aws-general-policies/ensure-aws-rds-uses-a-modern-cacert
+Check: CKV_AWS_388: "Ensure AWS Aurora PostgreSQL is not exposed to local file read vulnerability"
+	PASSED for resource: aws_db_instance.public_postgres
+	File: /main.tf:178-196
+Check: CKV_AWS_133: "Ensure that RDS instances has backup policy"
+	PASSED for resource: aws_db_instance.public_postgres
+	File: /main.tf:178-196
+	Guide: https://docs.prismacloud.io/en/enterprise-edition/policy-reference/aws-policies/aws-general-policies/ensure-that-rds-instances-have-backup-policy
+Check: CKV_AWS_41: "Ensure no hard coded AWS access key and secret key exists in provider"
+	PASSED for resource: aws.default
+	File: /main.tf:12-14
+	Guide: https://docs.prismacloud.io/en/enterprise-edition/policy-reference/aws-policies/secrets-policies/bc-aws-secrets-5
+Check: CKV2_AWS_22: "Ensure an IAM User does not have access to the console"
+	PASSED for resource: aws_iam_user.overprivileged_user
+	File: /main.tf:71-74
+	Guide: https://docs.prismacloud.io/en/enterprise-edition/policy-reference/aws-policies/aws-iam-policies/ensure-an-iam-user-does-not-have-access-to-the-console-group
+Check: CKV2_AWS_5: "Ensure that Security Groups are attached to another resource"
+	PASSED for resource: aws_security_group.open_admin
+	File: /main.tf:129-166
+	Guide: https://docs.prismacloud.io/en/enterprise-edition/policy-reference/aws-policies/aws-networking-policies/ensure-that-security-groups-are-attached-to-ec2-instances-or-elastic-network-interfaces-enis
+Check: CKV2_AWS_69: "Ensure AWS RDS database instance configured with encryption in transit"
+	PASSED for resource: aws_db_instance.public_postgres
+	File: /main.tf:178-196
+	Guide: https://docs.prismacloud.io/en/enterprise-edition/policy-reference/aws-policies/aws-networking-policies/bc-aws-2-69
+Check: CKV_AWS_57: "S3 Bucket has an ACL defined which allows public WRITE access."
+	PASSED for resource: aws_s3_bucket.public_data
+	File: /main.tf:31-38
+	Guide: https://docs.prismacloud.io/en/enterprise-edition/policy-reference/aws-policies/s3-policies/s3-2-acl-write-permissions-everyone
+Check: CKV_AWS_20: "S3 Bucket has an ACL defined which allows public READ access."
+	PASSED for resource: aws_s3_bucket.public_data
+	File: /main.tf:31-38
+	Guide: https://docs.prismacloud.io/en/enterprise-edition/policy-reference/aws-policies/s3-policies/s3-1-acl-read-permissions-everyone
+Check: CKV_AWS_19: "Ensure all data stored in the S3 bucket is securely encrypted at rest"
+	PASSED for resource: aws_s3_bucket.public_data
+	File: /main.tf:31-38
+	Guide: https://docs.prismacloud.io/en/enterprise-edition/policy-reference/aws-policies/s3-policies/s3-14-data-encrypted-at-rest
+Check: CKV_AWS_55: "Ensure S3 bucket has ignore public ACLs enabled"
+	FAILED for resource: aws_s3_bucket_public_access_block.public_data
+	File: /main.tf:40-47
+	Guide: https://docs.prismacloud.io/en/enterprise-edition/policy-reference/aws-policies/s3-policies/bc-aws-s3-21
+
+		40 | resource "aws_s3_bucket_public_access_block" "public_data" {
+		41 |   bucket = aws_s3_bucket.public_data.id
+		42 |
+		43 |   block_public_acls       = false
+		44 |   block_public_policy     = false
+		45 |   ignore_public_acls      = false
+		46 |   restrict_public_buckets = false
+		47 | }
+
+Check: CKV_AWS_54: "Ensure S3 bucket has block public policy enabled"
+	FAILED for resource: aws_s3_bucket_public_access_block.public_data
+	File: /main.tf:40-47
+	Guide: https://docs.prismacloud.io/en/enterprise-edition/policy-reference/aws-policies/s3-policies/bc-aws-s3-20
+
+		40 | resource "aws_s3_bucket_public_access_block" "public_data" {
+		41 |   bucket = aws_s3_bucket.public_data.id
+		42 |
+		43 |   block_public_acls       = false
+		44 |   block_public_policy     = false
+		45 |   ignore_public_acls      = false
+		46 |   restrict_public_buckets = false
+		47 | }
+
+Check: CKV_AWS_56: "Ensure S3 bucket has 'restrict_public_buckets' enabled"
+	FAILED for resource: aws_s3_bucket_public_access_block.public_data
+	File: /main.tf:40-47
+	Guide: https://docs.prismacloud.io/en/enterprise-edition/policy-reference/aws-policies/s3-policies/bc-aws-s3-22
+
+		40 | resource "aws_s3_bucket_public_access_block" "public_data" {
+		41 |   bucket = aws_s3_bucket.public_data.id
+		42 |
+		43 |   block_public_acls       = false
+		44 |   block_public_policy     = false
+		45 |   ignore_public_acls      = false
+		46 |   restrict_public_buckets = false
+		47 | }
+
+Check: CKV_AWS_53: "Ensure S3 bucket has block public ACLS enabled"
+	FAILED for resource: aws_s3_bucket_public_access_block.public_data
+	File: /main.tf:40-47
+	Guide: https://docs.prismacloud.io/en/enterprise-edition/policy-reference/aws-policies/s3-policies/bc-aws-s3-19
+
+		40 | resource "aws_s3_bucket_public_access_block" "public_data" {
+		41 |   bucket = aws_s3_bucket.public_data.id
+		42 |
+		43 |   block_public_acls       = false
+		44 |   block_public_policy     = false
+		45 |   ignore_public_acls      = false
+		46 |   restrict_public_buckets = false
+		47 | }
+
+Check: CKV_AWS_70: "Ensure S3 bucket does not allow an action with any Principal"
+	FAILED for resource: aws_s3_bucket_policy.public_read
+	File: /main.tf:49-66
+	Guide: https://docs.prismacloud.io/en/enterprise-edition/policy-reference/aws-policies/s3-policies/bc-aws-s3-23
+
+		49 | resource "aws_s3_bucket_policy" "public_read" {
+		50 |   bucket = aws_s3_bucket.public_data.id
+		51 |
+		52 |   policy = jsonencode({
+		53 |     Version = "2012-10-17"
+		54 |     Statement = [
+		55 |       {
+		56 |         Sid       = "PublicReadForLab"
+		57 |         Effect    = "Allow"
+		58 |         Principal = "*"
+		59 |         Action    = "s3:GetObject"
+		60 |         Resource  = "${aws_s3_bucket.public_data.arn}/*"
+		61 |       }
+		62 |     ]
+		63 |   })
+		64 |
+		65 |   depends_on = [aws_s3_bucket_public_access_block.public_data]
+		66 | }
+
+Check: CKV_AWS_273: "Ensure access is controlled through SSO and not AWS IAM defined users"
+	FAILED for resource: aws_iam_user.overprivileged_user
+	File: /main.tf:71-74
+	Guide: https://docs.prismacloud.io/en/enterprise-edition/policy-reference/aws-policies/aws-iam-policies/bc-aws-273
+
+		71 | resource "aws_iam_user" "overprivileged_user" {
+		72 |   name = "${local.name_prefix}-admin-like-user"
+		73 |   tags = local.common_tags
+		74 | }
+
+Check: CKV_AWS_290: "Ensure IAM policies does not allow write access without constraints"
+	FAILED for resource: aws_iam_policy.overly_permissive
+	File: /main.tf:76-93
+	Guide: https://docs.prismacloud.io/en/enterprise-edition/policy-reference/aws-policies/aws-iam-policies/bc-aws-290
+
+		76 | resource "aws_iam_policy" "overly_permissive" {
+		77 |   name        = "${local.name_prefix}-wildcard-policy"
+		78 |   description = "Intentionally excessive permissions for posture review lab"
+		79 |
+		80 |   policy = jsonencode({
+		81 |     Version = "2012-10-17"
+		82 |     Statement = [
+		83 |       {
+		84 |         Sid      = "WildcardPermissions"
+		85 |         Effect   = "Allow"
+		86 |         Action   = "*"
+		87 |         Resource = "*"
+		88 |       }
+		89 |     ]
+		90 |   })
+		91 |
+		92 |   tags = local.common_tags
+		93 | }
+
+Check: CKV_AWS_286: "Ensure IAM policies does not allow privilege escalation"
+	FAILED for resource: aws_iam_policy.overly_permissive
+	File: /main.tf:76-93
+	Guide: https://docs.prismacloud.io/en/enterprise-edition/policy-reference/aws-policies/aws-iam-policies/bc-aws-286
+
+		76 | resource "aws_iam_policy" "overly_permissive" {
+		77 |   name        = "${local.name_prefix}-wildcard-policy"
+		78 |   description = "Intentionally excessive permissions for posture review lab"
+		79 |
+		80 |   policy = jsonencode({
+		81 |     Version = "2012-10-17"
+		82 |     Statement = [
+		83 |       {
+		84 |         Sid      = "WildcardPermissions"
+		85 |         Effect   = "Allow"
+		86 |         Action   = "*"
+		87 |         Resource = "*"
+		88 |       }
+		89 |     ]
+		90 |   })
+		91 |
+		92 |   tags = local.common_tags
+		93 | }
+
+Check: CKV_AWS_355: "Ensure no IAM policies documents allow "*" as a statement's resource for restrictable actions"
+	FAILED for resource: aws_iam_policy.overly_permissive
+	File: /main.tf:76-93
+	Guide: https://docs.prismacloud.io/en/enterprise-edition/policy-reference/aws-policies/aws-iam-policies/bc-aws-355
+
+		76 | resource "aws_iam_policy" "overly_permissive" {
+		77 |   name        = "${local.name_prefix}-wildcard-policy"
+		78 |   description = "Intentionally excessive permissions for posture review lab"
+		79 |
+		80 |   policy = jsonencode({
+		81 |     Version = "2012-10-17"
+		82 |     Statement = [
+		83 |       {
+		84 |         Sid      = "WildcardPermissions"
+		85 |         Effect   = "Allow"
+		86 |         Action   = "*"
+		87 |         Resource = "*"
+		88 |       }
+		89 |     ]
+		90 |   })
+		91 |
+		92 |   tags = local.common_tags
+		93 | }
+
+Check: CKV_AWS_62: "Ensure IAM policies that allow full "*-*" administrative privileges are not created"
+	FAILED for resource: aws_iam_policy.overly_permissive
+	File: /main.tf:76-93
+	Guide: https://docs.prismacloud.io/en/enterprise-edition/policy-reference/aws-policies/aws-iam-policies/bc-aws-iam-45
+
+		76 | resource "aws_iam_policy" "overly_permissive" {
+		77 |   name        = "${local.name_prefix}-wildcard-policy"
+		78 |   description = "Intentionally excessive permissions for posture review lab"
+		79 |
+		80 |   policy = jsonencode({
+		81 |     Version = "2012-10-17"
+		82 |     Statement = [
+		83 |       {
+		84 |         Sid      = "WildcardPermissions"
+		85 |         Effect   = "Allow"
+		86 |         Action   = "*"
+		87 |         Resource = "*"
+		88 |       }
+		89 |     ]
+		90 |   })
+		91 |
+		92 |   tags = local.common_tags
+		93 | }
+
+Check: CKV_AWS_63: "Ensure no IAM policies documents allow "*" as a statement's actions"
+	FAILED for resource: aws_iam_policy.overly_permissive
+	File: /main.tf:76-93
+	Guide: https://docs.prismacloud.io/en/enterprise-edition/policy-reference/aws-policies/aws-iam-policies/iam-48
+
+		76 | resource "aws_iam_policy" "overly_permissive" {
+		77 |   name        = "${local.name_prefix}-wildcard-policy"
+		78 |   description = "Intentionally excessive permissions for posture review lab"
+		79 |
+		80 |   policy = jsonencode({
+		81 |     Version = "2012-10-17"
+		82 |     Statement = [
+		83 |       {
+		84 |         Sid      = "WildcardPermissions"
+		85 |         Effect   = "Allow"
+		86 |         Action   = "*"
+		87 |         Resource = "*"
+		88 |       }
+		89 |     ]
+		90 |   })
+		91 |
+		92 |   tags = local.common_tags
+		93 | }
+
+Check: CKV_AWS_289: "Ensure IAM policies does not allow permissions management / resource exposure without constraints"
+	FAILED for resource: aws_iam_policy.overly_permissive
+	File: /main.tf:76-93
+	Guide: https://docs.prismacloud.io/en/enterprise-edition/policy-reference/aws-policies/aws-iam-policies/bc-aws-289
+
+		76 | resource "aws_iam_policy" "overly_permissive" {
+		77 |   name        = "${local.name_prefix}-wildcard-policy"
+		78 |   description = "Intentionally excessive permissions for posture review lab"
+		79 |
+		80 |   policy = jsonencode({
+		81 |     Version = "2012-10-17"
+		82 |     Statement = [
+		83 |       {
+		84 |         Sid      = "WildcardPermissions"
+		85 |         Effect   = "Allow"
+		86 |         Action   = "*"
+		87 |         Resource = "*"
+		88 |       }
+		89 |     ]
+		90 |   })
+		91 |
+		92 |   tags = local.common_tags
+		93 | }
+
+Check: CKV_AWS_287: "Ensure IAM policies does not allow credentials exposure"
+	FAILED for resource: aws_iam_policy.overly_permissive
+	File: /main.tf:76-93
+	Guide: https://docs.prismacloud.io/en/enterprise-edition/policy-reference/aws-policies/aws-iam-policies/bc-aws-287
+
+		76 | resource "aws_iam_policy" "overly_permissive" {
+		77 |   name        = "${local.name_prefix}-wildcard-policy"
+		78 |   description = "Intentionally excessive permissions for posture review lab"
+		79 |
+		80 |   policy = jsonencode({
+		81 |     Version = "2012-10-17"
+		82 |     Statement = [
+		83 |       {
+		84 |         Sid      = "WildcardPermissions"
+		85 |         Effect   = "Allow"
+		86 |         Action   = "*"
+		87 |         Resource = "*"
+		88 |       }
+		89 |     ]
+		90 |   })
+		91 |
+		92 |   tags = local.common_tags
+		93 | }
+
+Check: CKV_AWS_288: "Ensure IAM policies does not allow data exfiltration"
+	FAILED for resource: aws_iam_policy.overly_permissive
+	File: /main.tf:76-93
+	Guide: https://docs.prismacloud.io/en/enterprise-edition/policy-reference/aws-policies/aws-iam-policies/bc-aws-288
+
+		76 | resource "aws_iam_policy" "overly_permissive" {
+		77 |   name        = "${local.name_prefix}-wildcard-policy"
+		78 |   description = "Intentionally excessive permissions for posture review lab"
+		79 |
+		80 |   policy = jsonencode({
+		81 |     Version = "2012-10-17"
+		82 |     Statement = [
+		83 |       {
+		84 |         Sid      = "WildcardPermissions"
+		85 |         Effect   = "Allow"
+		86 |         Action   = "*"
+		87 |         Resource = "*"
+		88 |       }
+		89 |     ]
+		90 |   })
+		91 |
+		92 |   tags = local.common_tags
+		93 | }
+
+Check: CKV_AWS_40: "Ensure IAM policies are attached only to groups or roles (Reducing access management complexity may in-turn reduce opportunity for a principal to inadvertently receive or retain excessive privileges.)"
+	FAILED for resource: aws_iam_user_policy_attachment.overprivileged_user
+	File: /main.tf:95-98
+	Guide: https://docs.prismacloud.io/en/enterprise-edition/policy-reference/aws-policies/aws-iam-policies/iam-16-iam-policy-privileges-1
+
+		95 | resource "aws_iam_user_policy_attachment" "overprivileged_user" {
+		96 |   user       = aws_iam_user.overprivileged_user.name
+		97 |   policy_arn = aws_iam_policy.overly_permissive.arn
+		98 | }
+
+Check: CKV_AWS_130: "Ensure VPC subnets do not assign public IP by default"
+	FAILED for resource: aws_subnet.public_a
+	File: /main.tf:111-118
+	Guide: https://docs.prismacloud.io/en/enterprise-edition/policy-reference/aws-policies/aws-networking-policies/ensure-vpc-subnets-do-not-assign-public-ip-by-default
+
+		111 | resource "aws_subnet" "public_a" {
+		112 |   vpc_id                  = aws_vpc.lab.id
+		113 |   cidr_block              = "10.10.1.0/24"
+		114 |   availability_zone       = "${var.aws_region}a"
+		115 |   map_public_ip_on_launch = true
+		116 |
+		117 |   tags = merge(local.common_tags, { Name = "${local.name_prefix}-public-a" })
+		118 | }
+
+Check: CKV_AWS_130: "Ensure VPC subnets do not assign public IP by default"
+	FAILED for resource: aws_subnet.public_b
+	File: /main.tf:120-127
+	Guide: https://docs.prismacloud.io/en/enterprise-edition/policy-reference/aws-policies/aws-networking-policies/ensure-vpc-subnets-do-not-assign-public-ip-by-default
+
+		120 | resource "aws_subnet" "public_b" {
+		121 |   vpc_id                  = aws_vpc.lab.id
+		122 |   cidr_block              = "10.10.2.0/24"
+		123 |   availability_zone       = "${var.aws_region}b"
+		124 |   map_public_ip_on_launch = true
+		125 |
+		126 |   tags = merge(local.common_tags, { Name = "${local.name_prefix}-public-b" })
+		127 | }
+
+Check: CKV_AWS_382: "Ensure no security groups allow egress from 0.0.0.0:0 to port -1"
+	FAILED for resource: aws_security_group.open_admin
+	File: /main.tf:129-166
+	Guide: https://docs.prismacloud.io/en/enterprise-edition/policy-reference/aws-policies/aws-networking-policies/bc-aws-382
+
+		129 | resource "aws_security_group" "open_admin" {
+		130 |   name        = "${local.name_prefix}-open-admin"
+		131 |   description = "Intentionally exposes admin and database ports to the internet"
+		132 |   vpc_id      = aws_vpc.lab.id
+		133 |
+		134 |   ingress {
+		135 |     description = "SSH open to world"
+		136 |     from_port   = 22
+		137 |     to_port     = 22
+		138 |     protocol    = "tcp"
+		139 |     cidr_blocks = ["0.0.0.0/0"]
+		140 |   }
+		141 |
+		142 |   ingress {
+		143 |     description = "HTTP open to world"
+		144 |     from_port   = 80
+		145 |     to_port     = 80
+		146 |     protocol    = "tcp"
+		147 |     cidr_blocks = ["0.0.0.0/0"]
+		148 |   }
+		149 |
+		150 |   ingress {
+		151 |     description = "PostgreSQL open to world"
+		152 |     from_port   = 5432
+		153 |     to_port     = 5432
+		154 |     protocol    = "tcp"
+		155 |     cidr_blocks = ["0.0.0.0/0"]
+		156 |   }
+		157 |
+		158 |   egress {
+		159 |     from_port   = 0
+		160 |     to_port     = 0
+		161 |     protocol    = "-1"
+		162 |     cidr_blocks = ["0.0.0.0/0"]
+		163 |   }
+		164 |
+		165 |   tags = local.common_tags
+		166 | }
+
+Check: CKV_AWS_24: "Ensure no security groups allow ingress from 0.0.0.0:0 to port 22"
+	FAILED for resource: aws_security_group.open_admin
+	File: /main.tf:129-166
+	Guide: https://docs.prismacloud.io/en/enterprise-edition/policy-reference/aws-policies/aws-networking-policies/networking-1-port-security
+
+		129 | resource "aws_security_group" "open_admin" {
+		130 |   name        = "${local.name_prefix}-open-admin"
+		131 |   description = "Intentionally exposes admin and database ports to the internet"
+		132 |   vpc_id      = aws_vpc.lab.id
+		133 |
+		134 |   ingress {
+		135 |     description = "SSH open to world"
+		136 |     from_port   = 22
+		137 |     to_port     = 22
+		138 |     protocol    = "tcp"
+		139 |     cidr_blocks = ["0.0.0.0/0"]
+		140 |   }
+		141 |
+		142 |   ingress {
+		143 |     description = "HTTP open to world"
+		144 |     from_port   = 80
+		145 |     to_port     = 80
+		146 |     protocol    = "tcp"
+		147 |     cidr_blocks = ["0.0.0.0/0"]
+		148 |   }
+		149 |
+		150 |   ingress {
+		151 |     description = "PostgreSQL open to world"
+		152 |     from_port   = 5432
+		153 |     to_port     = 5432
+		154 |     protocol    = "tcp"
+		155 |     cidr_blocks = ["0.0.0.0/0"]
+		156 |   }
+		157 |
+		158 |   egress {
+		159 |     from_port   = 0
+		160 |     to_port     = 0
+		161 |     protocol    = "-1"
+		162 |     cidr_blocks = ["0.0.0.0/0"]
+		163 |   }
+		164 |
+		165 |   tags = local.common_tags
+		166 | }
+
+Check: CKV_AWS_23: "Ensure every security group and rule has a description"
+	FAILED for resource: aws_security_group.open_admin
+	File: /main.tf:129-166
+	Guide: https://docs.prismacloud.io/en/enterprise-edition/policy-reference/aws-policies/aws-networking-policies/networking-31
+
+		129 | resource "aws_security_group" "open_admin" {
+		130 |   name        = "${local.name_prefix}-open-admin"
+		131 |   description = "Intentionally exposes admin and database ports to the internet"
+		132 |   vpc_id      = aws_vpc.lab.id
+		133 |
+		134 |   ingress {
+		135 |     description = "SSH open to world"
+		136 |     from_port   = 22
+		137 |     to_port     = 22
+		138 |     protocol    = "tcp"
+		139 |     cidr_blocks = ["0.0.0.0/0"]
+		140 |   }
+		141 |
+		142 |   ingress {
+		143 |     description = "HTTP open to world"
+		144 |     from_port   = 80
+		145 |     to_port     = 80
+		146 |     protocol    = "tcp"
+		147 |     cidr_blocks = ["0.0.0.0/0"]
+		148 |   }
+		149 |
+		150 |   ingress {
+		151 |     description = "PostgreSQL open to world"
+		152 |     from_port   = 5432
+		153 |     to_port     = 5432
+		154 |     protocol    = "tcp"
+		155 |     cidr_blocks = ["0.0.0.0/0"]
+		156 |   }
+		157 |
+		158 |   egress {
+		159 |     from_port   = 0
+		160 |     to_port     = 0
+		161 |     protocol    = "-1"
+		162 |     cidr_blocks = ["0.0.0.0/0"]
+		163 |   }
+		164 |
+		165 |   tags = local.common_tags
+		166 | }
+
+Check: CKV_AWS_260: "Ensure no security groups allow ingress from 0.0.0.0:0 to port 80"
+	FAILED for resource: aws_security_group.open_admin
+	File: /main.tf:129-166
+	Guide: https://docs.prismacloud.io/en/enterprise-edition/policy-reference/aws-policies/aws-networking-policies/ensure-aws-security-groups-do-not-allow-ingress-from-00000-to-port-80
+
+		129 | resource "aws_security_group" "open_admin" {
+		130 |   name        = "${local.name_prefix}-open-admin"
+		131 |   description = "Intentionally exposes admin and database ports to the internet"
+		132 |   vpc_id      = aws_vpc.lab.id
+		133 |
+		134 |   ingress {
+		135 |     description = "SSH open to world"
+		136 |     from_port   = 22
+		137 |     to_port     = 22
+		138 |     protocol    = "tcp"
+		139 |     cidr_blocks = ["0.0.0.0/0"]
+		140 |   }
+		141 |
+		142 |   ingress {
+		143 |     description = "HTTP open to world"
+		144 |     from_port   = 80
+		145 |     to_port     = 80
+		146 |     protocol    = "tcp"
+		147 |     cidr_blocks = ["0.0.0.0/0"]
+		148 |   }
+		149 |
+		150 |   ingress {
+		151 |     description = "PostgreSQL open to world"
+		152 |     from_port   = 5432
+		153 |     to_port     = 5432
+		154 |     protocol    = "tcp"
+		155 |     cidr_blocks = ["0.0.0.0/0"]
+		156 |   }
+		157 |
+		158 |   egress {
+		159 |     from_port   = 0
+		160 |     to_port     = 0
+		161 |     protocol    = "-1"
+		162 |     cidr_blocks = ["0.0.0.0/0"]
+		163 |   }
+		164 |
+		165 |   tags = local.common_tags
+		166 | }
+
+Check: CKV_AWS_161: "Ensure RDS database has IAM authentication enabled"
+	FAILED for resource: aws_db_instance.public_postgres
+	File: /main.tf:178-196
+	Guide: https://docs.prismacloud.io/en/enterprise-edition/policy-reference/aws-policies/aws-iam-policies/ensure-rds-database-has-iam-authentication-enabled
+
+		178 | resource "aws_db_instance" "public_postgres" {
+		179 |   identifier             = "${local.name_prefix}-postgres"
+		180 |   engine                 = "postgres"
+		181 |   engine_version         = "15"
+		182 |   instance_class         = "db.t3.micro"
+		183 |   allocated_storage      = 20
+		184 |   db_name                = "labdb"
+		185 |   username               = "labadmin"
+		186 |   password               = var.database_password
+		187 |   db_subnet_group_name   = aws_db_subnet_group.public.name
+		188 |   vpc_security_group_ids = [aws_security_group.open_admin.id]
+		189 |   publicly_accessible    = true
+		190 |   storage_encrypted      = false
+		191 |   skip_final_snapshot    = true
+		192 |
+		193 |   tags = merge(local.common_tags, {
+		194 |     Finding = "Publicly accessible unencrypted RDS instance"
+		195 |   })
+		196 | }
+
+Check: CKV_AWS_17: "Ensure all data stored in RDS is not publicly accessible"
+	FAILED for resource: aws_db_instance.public_postgres
+	File: /main.tf:178-196
+	Guide: https://docs.prismacloud.io/en/enterprise-edition/policy-reference/aws-policies/public-policies/public-2
+
+		178 | resource "aws_db_instance" "public_postgres" {
+		179 |   identifier             = "${local.name_prefix}-postgres"
+		180 |   engine                 = "postgres"
+		181 |   engine_version         = "15"
+		182 |   instance_class         = "db.t3.micro"
+		183 |   allocated_storage      = 20
+		184 |   db_name                = "labdb"
+		185 |   username               = "labadmin"
+		186 |   password               = var.database_password
+		187 |   db_subnet_group_name   = aws_db_subnet_group.public.name
+		188 |   vpc_security_group_ids = [aws_security_group.open_admin.id]
+		189 |   publicly_accessible    = true
+		190 |   storage_encrypted      = false
+		191 |   skip_final_snapshot    = true
+		192 |
+		193 |   tags = merge(local.common_tags, {
+		194 |     Finding = "Publicly accessible unencrypted RDS instance"
+		195 |   })
+		196 | }
+
+Check: CKV_AWS_293: "Ensure that AWS database instances have deletion protection enabled"
+	FAILED for resource: aws_db_instance.public_postgres
+	File: /main.tf:178-196
+	Guide: https://docs.prismacloud.io/en/enterprise-edition/policy-reference/aws-policies/aws-general-policies/bc-aws-293
+
+		178 | resource "aws_db_instance" "public_postgres" {
+		179 |   identifier             = "${local.name_prefix}-postgres"
+		180 |   engine                 = "postgres"
+		181 |   engine_version         = "15"
+		182 |   instance_class         = "db.t3.micro"
+		183 |   allocated_storage      = 20
+		184 |   db_name                = "labdb"
+		185 |   username               = "labadmin"
+		186 |   password               = var.database_password
+		187 |   db_subnet_group_name   = aws_db_subnet_group.public.name
+		188 |   vpc_security_group_ids = [aws_security_group.open_admin.id]
+		189 |   publicly_accessible    = true
+		190 |   storage_encrypted      = false
+		191 |   skip_final_snapshot    = true
+		192 |
+		193 |   tags = merge(local.common_tags, {
+		194 |     Finding = "Publicly accessible unencrypted RDS instance"
+		195 |   })
+		196 | }
+
+Check: CKV_AWS_226: "Ensure DB instance gets all minor upgrades automatically"
+	FAILED for resource: aws_db_instance.public_postgres
+	File: /main.tf:178-196
+	Guide: https://docs.prismacloud.io/en/enterprise-edition/policy-reference/aws-policies/aws-general-policies/ensure-aws-db-instance-gets-all-minor-upgrades-automatically
+
+		178 | resource "aws_db_instance" "public_postgres" {
+		179 |   identifier             = "${local.name_prefix}-postgres"
+		180 |   engine                 = "postgres"
+		181 |   engine_version         = "15"
+		182 |   instance_class         = "db.t3.micro"
+		183 |   allocated_storage      = 20
+		184 |   db_name                = "labdb"
+		185 |   username               = "labadmin"
+		186 |   password               = var.database_password
+		187 |   db_subnet_group_name   = aws_db_subnet_group.public.name
+		188 |   vpc_security_group_ids = [aws_security_group.open_admin.id]
+		189 |   publicly_accessible    = true
+		190 |   storage_encrypted      = false
+		191 |   skip_final_snapshot    = true
+		192 |
+		193 |   tags = merge(local.common_tags, {
+		194 |     Finding = "Publicly accessible unencrypted RDS instance"
+		195 |   })
+		196 | }
+
+Check: CKV_AWS_129: "Ensure that respective logs of Amazon Relational Database Service (Amazon RDS) are enabled"
+	FAILED for resource: aws_db_instance.public_postgres
+	File: /main.tf:178-196
+	Guide: https://docs.prismacloud.io/en/enterprise-edition/policy-reference/aws-policies/aws-iam-policies/ensure-that-respective-logs-of-amazon-relational-database-service-amazon-rds-are-enabled
+
+		178 | resource "aws_db_instance" "public_postgres" {
+		179 |   identifier             = "${local.name_prefix}-postgres"
+		180 |   engine                 = "postgres"
+		181 |   engine_version         = "15"
+		182 |   instance_class         = "db.t3.micro"
+		183 |   allocated_storage      = 20
+		184 |   db_name                = "labdb"
+		185 |   username               = "labadmin"
+		186 |   password               = var.database_password
+		187 |   db_subnet_group_name   = aws_db_subnet_group.public.name
+		188 |   vpc_security_group_ids = [aws_security_group.open_admin.id]
+		189 |   publicly_accessible    = true
+		190 |   storage_encrypted      = false
+		191 |   skip_final_snapshot    = true
+		192 |
+		193 |   tags = merge(local.common_tags, {
+		194 |     Finding = "Publicly accessible unencrypted RDS instance"
+		195 |   })
+		196 | }
+
+Check: CKV_AWS_16: "Ensure all data stored in the RDS is securely encrypted at rest"
+	FAILED for resource: aws_db_instance.public_postgres
+	File: /main.tf:178-196
+	Guide: https://docs.prismacloud.io/en/enterprise-edition/policy-reference/aws-policies/aws-general-policies/general-4
+
+		178 | resource "aws_db_instance" "public_postgres" {
+		179 |   identifier             = "${local.name_prefix}-postgres"
+		180 |   engine                 = "postgres"
+		181 |   engine_version         = "15"
+		182 |   instance_class         = "db.t3.micro"
+		183 |   allocated_storage      = 20
+		184 |   db_name                = "labdb"
+		185 |   username               = "labadmin"
+		186 |   password               = var.database_password
+		187 |   db_subnet_group_name   = aws_db_subnet_group.public.name
+		188 |   vpc_security_group_ids = [aws_security_group.open_admin.id]
+		189 |   publicly_accessible    = true
+		190 |   storage_encrypted      = false
+		191 |   skip_final_snapshot    = true
+		192 |
+		193 |   tags = merge(local.common_tags, {
+		194 |     Finding = "Publicly accessible unencrypted RDS instance"
+		195 |   })
+		196 | }
+
+Check: CKV_AWS_157: "Ensure that RDS instances have Multi-AZ enabled"
+	FAILED for resource: aws_db_instance.public_postgres
+	File: /main.tf:178-196
+	Guide: https://docs.prismacloud.io/en/enterprise-edition/policy-reference/aws-policies/aws-general-policies/general-73
+
+		178 | resource "aws_db_instance" "public_postgres" {
+		179 |   identifier             = "${local.name_prefix}-postgres"
+		180 |   engine                 = "postgres"
+		181 |   engine_version         = "15"
+		182 |   instance_class         = "db.t3.micro"
+		183 |   allocated_storage      = 20
+		184 |   db_name                = "labdb"
+		185 |   username               = "labadmin"
+		186 |   password               = var.database_password
+		187 |   db_subnet_group_name   = aws_db_subnet_group.public.name
+		188 |   vpc_security_group_ids = [aws_security_group.open_admin.id]
+		189 |   publicly_accessible    = true
+		190 |   storage_encrypted      = false
+		191 |   skip_final_snapshot    = true
+		192 |
+		193 |   tags = merge(local.common_tags, {
+		194 |     Finding = "Publicly accessible unencrypted RDS instance"
+		195 |   })
+		196 | }
+
+Check: CKV_AWS_118: "Ensure that enhanced monitoring is enabled for Amazon RDS instances"
+	FAILED for resource: aws_db_instance.public_postgres
+	File: /main.tf:178-196
+	Guide: https://docs.prismacloud.io/en/enterprise-edition/policy-reference/aws-policies/aws-logging-policies/ensure-that-enhanced-monitoring-is-enabled-for-amazon-rds-instances
+
+		178 | resource "aws_db_instance" "public_postgres" {
+		179 |   identifier             = "${local.name_prefix}-postgres"
+		180 |   engine                 = "postgres"
+		181 |   engine_version         = "15"
+		182 |   instance_class         = "db.t3.micro"
+		183 |   allocated_storage      = 20
+		184 |   db_name                = "labdb"
+		185 |   username               = "labadmin"
+		186 |   password               = var.database_password
+		187 |   db_subnet_group_name   = aws_db_subnet_group.public.name
+		188 |   vpc_security_group_ids = [aws_security_group.open_admin.id]
+		189 |   publicly_accessible    = true
+		190 |   storage_encrypted      = false
+		191 |   skip_final_snapshot    = true
+		192 |
+		193 |   tags = merge(local.common_tags, {
+		194 |     Finding = "Publicly accessible unencrypted RDS instance"
+		195 |   })
+		196 | }
+
+Check: CKV_AWS_353: "Ensure that RDS instances have performance insights enabled"
+	FAILED for resource: aws_db_instance.public_postgres
+	File: /main.tf:178-196
+	Guide: https://docs.prismacloud.io/en/enterprise-edition/policy-reference/aws-policies/aws-logging-policies/bc-aws-353
+
+		178 | resource "aws_db_instance" "public_postgres" {
+		179 |   identifier             = "${local.name_prefix}-postgres"
+		180 |   engine                 = "postgres"
+		181 |   engine_version         = "15"
+		182 |   instance_class         = "db.t3.micro"
+		183 |   allocated_storage      = 20
+		184 |   db_name                = "labdb"
+		185 |   username               = "labadmin"
+		186 |   password               = var.database_password
+		187 |   db_subnet_group_name   = aws_db_subnet_group.public.name
+		188 |   vpc_security_group_ids = [aws_security_group.open_admin.id]
+		189 |   publicly_accessible    = true
+		190 |   storage_encrypted      = false
+		191 |   skip_final_snapshot    = true
+		192 |
+		193 |   tags = merge(local.common_tags, {
+		194 |     Finding = "Publicly accessible unencrypted RDS instance"
+		195 |   })
+		196 | }
+
+Check: CKV2_AWS_11: "Ensure VPC flow logging is enabled in all VPCs"
+	FAILED for resource: aws_vpc.lab
+	File: /main.tf:103-109
+	Guide: https://docs.prismacloud.io/en/enterprise-edition/policy-reference/aws-policies/aws-logging-policies/logging-9-enable-vpc-flow-logging
+
+		103 | resource "aws_vpc" "lab" {
+		104 |   cidr_block           = "10.10.0.0/16"
+		105 |   enable_dns_hostnames = true
+		106 |   enable_dns_support   = true
+		107 |
+		108 |   tags = merge(local.common_tags, { Name = "${local.name_prefix}-vpc" })
+		109 | }
+
+Check: CKV2_AWS_30: "Ensure Postgres RDS as aws_db_instance has Query Logging enabled"
+	FAILED for resource: aws_db_instance.public_postgres
+	File: /main.tf:178-196
+	Guide: https://docs.prismacloud.io/en/enterprise-edition/policy-reference/aws-policies/aws-general-policies/ensure-postgres-rds-has-query-logging-enabled
+
+		178 | resource "aws_db_instance" "public_postgres" {
+		179 |   identifier             = "${local.name_prefix}-postgres"
+		180 |   engine                 = "postgres"
+		181 |   engine_version         = "15"
+		182 |   instance_class         = "db.t3.micro"
+		183 |   allocated_storage      = 20
+		184 |   db_name                = "labdb"
+		185 |   username               = "labadmin"
+		186 |   password               = var.database_password
+		187 |   db_subnet_group_name   = aws_db_subnet_group.public.name
+		188 |   vpc_security_group_ids = [aws_security_group.open_admin.id]
+		189 |   publicly_accessible    = true
+		190 |   storage_encrypted      = false
+		191 |   skip_final_snapshot    = true
+		192 |
+		193 |   tags = merge(local.common_tags, {
+		194 |     Finding = "Publicly accessible unencrypted RDS instance"
+		195 |   })
+		196 | }
+
+Check: CKV2_AWS_60: "Ensure RDS instance with copy tags to snapshots is enabled"
+	FAILED for resource: aws_db_instance.public_postgres
+	File: /main.tf:178-196
+	Guide: https://docs.prismacloud.io/en/enterprise-edition/policy-reference/aws-policies/aws-general-policies/bc-aws-2-60
+
+		178 | resource "aws_db_instance" "public_postgres" {
+		179 |   identifier             = "${local.name_prefix}-postgres"
+		180 |   engine                 = "postgres"
+		181 |   engine_version         = "15"
+		182 |   instance_class         = "db.t3.micro"
+		183 |   allocated_storage      = 20
+		184 |   db_name                = "labdb"
+		185 |   username               = "labadmin"
+		186 |   password               = var.database_password
+		187 |   db_subnet_group_name   = aws_db_subnet_group.public.name
+		188 |   vpc_security_group_ids = [aws_security_group.open_admin.id]
+		189 |   publicly_accessible    = true
+		190 |   storage_encrypted      = false
+		191 |   skip_final_snapshot    = true
+		192 |
+		193 |   tags = merge(local.common_tags, {
+		194 |     Finding = "Publicly accessible unencrypted RDS instance"
+		195 |   })
+		196 | }
+
+Check: CKV2_AWS_12: "Ensure the default security group of every VPC restricts all traffic"
+	FAILED for resource: aws_vpc.lab
+	File: /main.tf:103-109
+	Guide: https://docs.prismacloud.io/en/enterprise-edition/policy-reference/aws-policies/aws-networking-policies/networking-4
+
+		103 | resource "aws_vpc" "lab" {
+		104 |   cidr_block           = "10.10.0.0/16"
+		105 |   enable_dns_hostnames = true
+		106 |   enable_dns_support   = true
+		107 |
+		108 |   tags = merge(local.common_tags, { Name = "${local.name_prefix}-vpc" })
+		109 | }
+
+Check: CKV2_AWS_62: "Ensure S3 buckets should have event notifications enabled"
+	FAILED for resource: aws_s3_bucket.public_data
+	File: /main.tf:31-38
+	Guide: https://docs.prismacloud.io/en/enterprise-edition/policy-reference/aws-policies/aws-logging-policies/bc-aws-2-62
+
+		31 | resource "aws_s3_bucket" "public_data" {
+		32 |   bucket        = "${local.name_prefix}-${data.aws_caller_identity.current.account_id}"
+		33 |   force_destroy = true
+		34 |
+		35 |   tags = merge(local.common_tags, {
+		36 |     Finding = "S3 bucket is publicly readable"
+		37 |   })
+		38 | }
+
+Check: CKV_AWS_18: "Ensure the S3 bucket has access logging enabled"
+	FAILED for resource: aws_s3_bucket.public_data
+	File: /main.tf:31-38
+	Guide: https://docs.prismacloud.io/en/enterprise-edition/policy-reference/aws-policies/s3-policies/s3-13-enable-logging
+
+		31 | resource "aws_s3_bucket" "public_data" {
+		32 |   bucket        = "${local.name_prefix}-${data.aws_caller_identity.current.account_id}"
+		33 |   force_destroy = true
+		34 |
+		35 |   tags = merge(local.common_tags, {
+		36 |     Finding = "S3 bucket is publicly readable"
+		37 |   })
+		38 | }
+
+Check: CKV_AWS_145: "Ensure that S3 buckets are encrypted with KMS by default"
+	FAILED for resource: aws_s3_bucket.public_data
+	File: /main.tf:31-38
+	Guide: https://docs.prismacloud.io/en/enterprise-edition/policy-reference/aws-policies/aws-general-policies/ensure-that-s3-buckets-are-encrypted-with-kms-by-default
+
+		31 | resource "aws_s3_bucket" "public_data" {
+		32 |   bucket        = "${local.name_prefix}-${data.aws_caller_identity.current.account_id}"
+		33 |   force_destroy = true
+		34 |
+		35 |   tags = merge(local.common_tags, {
+		36 |     Finding = "S3 bucket is publicly readable"
+		37 |   })
+		38 | }
+
+Check: CKV2_AWS_40: "Ensure AWS IAM policy does not allow full IAM privileges"
+	FAILED for resource: aws_iam_policy.overly_permissive
+	File: /main.tf:76-93
+	Guide: https://docs.prismacloud.io/en/enterprise-edition/policy-reference/aws-policies/aws-iam-policies/bc-aws-2-40
+
+		76 | resource "aws_iam_policy" "overly_permissive" {
+		77 |   name        = "${local.name_prefix}-wildcard-policy"
+		78 |   description = "Intentionally excessive permissions for posture review lab"
+		79 |
+		80 |   policy = jsonencode({
+		81 |     Version = "2012-10-17"
+		82 |     Statement = [
+		83 |       {
+		84 |         Sid      = "WildcardPermissions"
+		85 |         Effect   = "Allow"
+		86 |         Action   = "*"
+		87 |         Resource = "*"
+		88 |       }
+		89 |     ]
+		90 |   })
+		91 |
+		92 |   tags = local.common_tags
+		93 | }
+
+Check: CKV2_AWS_61: "Ensure that an S3 bucket has a lifecycle configuration"
+	FAILED for resource: aws_s3_bucket.public_data
+	File: /main.tf:31-38
+	Guide: https://docs.prismacloud.io/en/enterprise-edition/policy-reference/aws-policies/aws-logging-policies/bc-aws-2-61
+
+		31 | resource "aws_s3_bucket" "public_data" {
+		32 |   bucket        = "${local.name_prefix}-${data.aws_caller_identity.current.account_id}"
+		33 |   force_destroy = true
+		34 |
+		35 |   tags = merge(local.common_tags, {
+		36 |     Finding = "S3 bucket is publicly readable"
+		37 |   })
+		38 | }
+
+Check: CKV_AWS_21: "Ensure all data stored in the S3 bucket have versioning enabled"
+	FAILED for resource: aws_s3_bucket.public_data
+	File: /main.tf:31-38
+	Guide: https://docs.prismacloud.io/en/enterprise-edition/policy-reference/aws-policies/s3-policies/s3-16-enable-versioning
+
+		31 | resource "aws_s3_bucket" "public_data" {
+		32 |   bucket        = "${local.name_prefix}-${data.aws_caller_identity.current.account_id}"
+		33 |   force_destroy = true
+		34 |
+		35 |   tags = merge(local.common_tags, {
+		36 |     Finding = "S3 bucket is publicly readable"
+		37 |   })
+		38 | }
+
+Check: CKV_AWS_144: "Ensure that S3 bucket has cross-region replication enabled"
+	FAILED for resource: aws_s3_bucket.public_data
+	File: /main.tf:31-38
+	Guide: https://docs.prismacloud.io/en/enterprise-edition/policy-reference/aws-policies/aws-general-policies/ensure-that-s3-bucket-has-cross-region-replication-enabled
+
+		31 | resource "aws_s3_bucket" "public_data" {
+		32 |   bucket        = "${local.name_prefix}-${data.aws_caller_identity.current.account_id}"
+		33 |   force_destroy = true
+		34 |
+		35 |   tags = merge(local.common_tags, {
+		36 |     Finding = "S3 bucket is publicly readable"
+		37 |   })
+		38 | }
+
+Check: CKV2_AWS_6: "Ensure that S3 bucket has a Public Access block"
+	FAILED for resource: aws_s3_bucket.public_data
+	File: /main.tf:31-38
+	Guide: https://docs.prismacloud.io/en/enterprise-edition/policy-reference/aws-policies/aws-networking-policies/s3-bucket-should-have-public-access-blocks-defaults-to-false-if-the-public-access-block-is-not-attached
+
+		31 | resource "aws_s3_bucket" "public_data" {
+		32 |   bucket        = "${local.name_prefix}-${data.aws_caller_identity.current.account_id}"
+		33 |   force_destroy = true
+		34 |
+		35 |   tags = merge(local.common_tags, {
+		36 |     Finding = "S3 bucket is publicly readable"
+		37 |   })
+		38 | }
+
+

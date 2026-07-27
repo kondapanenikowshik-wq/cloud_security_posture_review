@@ -84,8 +84,42 @@ terraform plan
 - AWS Config
 - AWS Security Hub
 
-## Notes
+## Security scan results
 
-- Sample scan results are illustrative and should be replaced with actual tool output if the lab is deployed.
-- Terraform state, plan files, local variable files, and scanner artifacts are excluded from version control.
-- The Terraform does not create access keys or store cloud credentials.
+The Terraform configurations were validated and scanned locally using Checkov.
+
+| Configuration | Passed | Failed | Skipped |
+|---|---:|---:|---:|
+| Vulnerable | 16 | 42 | 0 |
+| Remediated | 47 | 22 | 0 |
+
+The remediated configuration produced:
+
+- 31 additional passing checks
+- 20 fewer failed checks
+- Approximately 47.6% fewer failed findings
+
+Detailed evidence is available in:
+
+- `scan-results/SCAN-SUMMARY.md`
+- `scan-results/vulnerable-checkov-report.txt`
+- `scan-results/remediated-checkov-report.txt`
+
+Remaining findings represent additional production-hardening controls such as centralized logging, cross-region replication, IAM Identity Center, stricter outbound network controls, and enhanced database monitoring.
+
+## Validation commands
+
+```bash
+terraform -chdir=configs/vulnerable validate
+terraform -chdir=configs/remediated validate
+
+checkov -d configs/vulnerable --framework terraform
+checkov -d configs/remediated --framework terraform
+```
+
+## Safety and limitations
+
+- The intentionally vulnerable infrastructure was not deployed.
+- Terraform state, plan files, local variable files, and credentials are excluded from version control.
+- The Terraform does not create access keys or store AWS credentials.
+- This repository demonstrates static Infrastructure-as-Code security assessment and remediation.
